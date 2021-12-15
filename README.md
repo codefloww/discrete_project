@@ -1,0 +1,1 @@
+Project for discrete math. This one is about work with graphs, their analysis.(Theme 7) It contains reading graphs, searching euler and hamilton cycles, checking whether graph is bipartite, checks if two graphs are isomorphic. Also, it finds 3-color coloring of graph, if possible.
