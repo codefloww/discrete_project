@@ -91,16 +91,35 @@ def isBipartite(graph):
     pass
 
 
-def isIsomorphic(graph1, graph2):
-    pass
+def areIsomorphic(graph1:dict, graph2:dict)->bool:
+    degree_invariant = set(check_degree(graph1).values()) == set(check_degree(graph2).values())
+    components_invariant = len(find_components(graph1))== len(find_components(graph2))  
+    return degree_invariant and components_invariant
+        
 
 
 def graph_coloring(graph):
     pass
 
 
-# can be used for searchig degree of vertices in graph
-def dfs(graph: dict, node: int, path: list = []) -> list:
+def check_degree(graph:dict)->dict:
+    vertices_degrees = {vertice: len(graph[vertice]) for vertice in graph}
+    return vertices_degrees
+
+
+def find_components(graph:dict)->list:
+    components = []
+    visited = []
+    for vertice in graph:
+        if vertice not in visited:
+            component = set(dfs(graph,vertice))
+            visited.extend(list(component))
+            components.append(component)
+    return components
+
+
+# can be used for backtracking
+def dfs(graph: dict, node: int, path: list = None) -> list:
     """recurrent dfs algo for adjecency list presented graph
 
     Args:
@@ -111,6 +130,8 @@ def dfs(graph: dict, node: int, path: list = []) -> list:
     Returns:
         list: path of dfs from vertex
     """
+    if path == None:
+        path = []
     path.append(node)
     for neighbour in graph[node]:
         if neighbour not in path:
@@ -148,19 +169,13 @@ def bfs(graph: dict, node: int) -> list:
 if __name__ == "__main__":
     import time
 
-    # import argparse
-
-    # parser = argparse.ArgumentParser(description="swaping lines in file")
-    # parser.add_argument("subline", help="line to swap")
-    # parser.add_argument("swapline", help="line to swap with")
-    # parser.add_argument("src", help="path to the file")
-    # parser.add_argument("--inplace", help="change initial file", action="store_true")
-    # args = parser.parse_args()
     start = time.perf_counter()
     # print(read_graph("graph_example.csv", repr_type="AdjMatrix",oriented=True))
     # print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
     # print(read_graph("graph_example.csv","AdjList"))
-    print(dfs(read_graph("graph_example.csv", "AdjDict"), 0))
-    print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
+    # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
+    # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
+    print(areIsomorphic(read_graph("graph_example.csv","AdjDict"),read_graph("graph_example.csv","AdjDict")))
+    print(find_components(read_graph("graph_example.csv","AdjDict")))
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
