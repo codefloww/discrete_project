@@ -88,6 +88,8 @@ def find_hamilton_cycle(graph):
         path: the path of the hamiltonian cycle or False if there are no
         cycles
     """
+    if len(find_components(graph)) != 1:
+        return False
     visited = {}
     for elem in graph:
         visited[elem] = False
