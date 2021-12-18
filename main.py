@@ -88,28 +88,30 @@ def find_hamilton_cycle(graph):
         path: the path of the hamiltonian cycle or False if there are no
         cycles
     """
-    for start in graph:
-        path = [start]
-        visited = [False]*len(graph)
-        visited[start] = True
+    visited = {}
+    for elem in graph:
+        visited[elem] = False
+    start = list(graph.keys())[0]
+    path = [start]
+    visited[start] = True
 
-        def hamiltonian_cycle(path, v):
-            if len(path) == len(graph):
-                if start in graph[v]:
-                    path.append(start)
+    def hamiltonian_cycle(path, v):
+        if len(path) == len(graph):
+            if start in graph[v]:
+                path.append(start)
+                return path
+            else:
+                pass
+        for elem in graph[v]:
+            if visited[elem] == False:
+                visited[elem] = True
+                path.append(elem)
+                if hamiltonian_cycle(path, elem) != False:
                     return path
-                else:
-                    pass
-            for elem in graph[v]:
-                if visited[elem] == False:
-                    visited[elem] = True
-                    path.append(elem)
-                    if hamiltonian_cycle(path, elem) != False:
-                        return path
-                    visited[elem] = False
-                    path.remove(elem)
-            return False
-        return hamiltonian_cycle(path, start)
+                visited[elem] = False
+                path.remove(elem)
+        return False
+    return hamiltonian_cycle(path, start)
 
 def find_euler_cycle(graph):
     pass
