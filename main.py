@@ -7,14 +7,19 @@ import scipy.sparse as sp
 # function can return oriented and non-oriented graphs in adjacency matrix, incidence matrix, adjacency list
 def read_graph(
     path_to_file: str, repr_type: str = "AdjMatrix", oriented: bool = None
-) -> np.ndarray:
-
+) -> dict:
     if oriented is None:
         oriented = False
     else:
         oriented = True
-    graph = pd.read_csv(path_to_file, skiprows=0).to_numpy()
-    graph = np.append(graph, np.full((np.shape(graph)[0], 1), [1]), axis=1)
+    # graph = pd.read_csv(path_to_file, skiprows=0,delimiter=" ").to_numpy()
+    # graph = np.append(graph, np.full((np.shape(graph)[0], 1), [1]), axis=1)
+    graph = set()
+    with open(path_to_file,'r') as graph_file:
+        edges = set(graph_file.readlines())
+    for edge in edges:
+        graph.add((tuple(map(int,edge[:-1].split(" ")))))
+
 
     if repr_type == "AdjMatrix":
         adj_matrix = transform_to_adj_matrix(graph, oriented)
@@ -165,17 +170,23 @@ def bfs(graph: dict, node: int) -> list:
                 queue.append(neighbour)
     return path
 
+def find_articular_points(graph,start_node):
+    pass
+
+
+def find_bridges(graph):
+   pass
 
 if __name__ == "__main__":
     import time
 
     start = time.perf_counter()
     # print(read_graph("graph_example.csv", repr_type="AdjMatrix",oriented=True))
-    # print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
-    # print(read_graph("graph_example.csv","AdjList"))
+    # print(read_graph("graph_100000_4998622_1.csv", repr_type="AdjDict"))
+    # read_graph("graph_100000_4998622_1.csv","AdjDict")
     # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
     # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
-    print(areIsomorphic(read_graph("graph_example.csv","AdjDict"),read_graph("graph_example.csv","AdjDict")))
-    print(find_components(read_graph("graph_example.csv","AdjDict")))
+    # print(areIsomorphic(read_graph("graph_example.csv","AdjDict"),read_graph("graph_example.csv","AdjDict")))
+    # print(find_components(read_graph("graph_example.csv","AdjDict")))
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
