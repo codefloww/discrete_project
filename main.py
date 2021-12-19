@@ -80,43 +80,47 @@ def transform_to_adj_matrix(graph: np.ndarray, oriented: bool) -> np.ndarray:
 
 
 def find_hamilton_cycle(graph):
-    """Find the hamiltonian cycle in the graph
+    pass
+
+
+def find_euler_cycle(graph):
+    """Find the euler cycle in the graph
+
     Args:
         graph (dict): the graph
 
     Returns:
-        path: the path of the hamiltonian cycle or False if there are no
+        path: the path of the euler cycle or False if there are no
         cycles
     """
-    if len(find_components(graph)) != 1:
-        return False
-    visited = {}
-    for elem in graph:
-        visited[elem] = False
-    start = list(graph.keys())[0]
-    path = [start]
-    visited[start] = True
-
-    def hamiltonian_cycle(path, v):
-        if len(path) == len(graph):
-            if start in graph[v]:
-                path.append(start)
-                return path
+    def euler_cycle(graph):
+        path = []
+        queue = [list(graph.keys())[0]]
+        while queue:
+            vertex = queue[-1]
+            if graph[vertex]:
+                adj_vertex=graph[vertex][0]
+                queue.append(adj_vertex)
+                graph.get(vertex).remove(adj_vertex)
+                graph.get(adj_vertex).remove(vertex)     
             else:
-                pass
-        for elem in graph[v]:
-            if visited[elem] == False:
-                visited[elem] = True
-                path.append(elem)
-                if hamiltonian_cycle(path, elem) != False:
-                    return path
-                visited[elem] = False
-                path.remove(elem)
-        return False
-    return hamiltonian_cycle(path, start)
+                path.append(queue.pop()) 
+        return path
 
-def find_euler_cycle(graph):
-    pass
+    counter=0
+    new_edge=[]
+    for i in graph:
+        if len(graph.get(i)) % 2 != 0:
+            counter+=1
+            new_edge.append(i)
+    if counter == 0:
+        return euler_cycle(graph)
+    elif counter == 2:
+        graph.get(new_edge[0]).append(new_edge[1])
+        graph.get(new_edge[1]).append(new_edge[0])
+        return euler_cycle(graph)
+    else:
+        return False
 
 
 def isBipartite(graph):
@@ -197,18 +201,18 @@ def bfs(graph: dict, node: int) -> list:
                 queue.append(neighbour)
     return path
 
-
 if __name__ == "__main__":
     import time
 
     start = time.perf_counter()
     # print(read_graph("graph_example.csv", repr_type="AdjMatrix",oriented=True))
-    # print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
-    # print(read_graph("graph_example.csv","AdjList"))
-    print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
-    # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
-    print(areIsomorphic(read_graph("graph_example.csv","AdjDict"),read_graph("graph_example.csv","AdjDict")))
-    print(find_components(read_graph("graph_example.csv","AdjDict")))
+    #print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
+    #print(read_graph("graph_example.csv","AdjDict"))
+    #print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
+    #print(check_degree(read_graph("graph_example.csv", "AdjDict")))
+    #print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))
+    #print(areIsomorphic(read_graph("graph_example.csv","AdjDict"),read_graph("graph_example.csv","AdjDict")))
+    #print(find_components(read_graph("graph_example.csv","AdjDict")))
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
+    
