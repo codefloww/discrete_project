@@ -80,8 +80,40 @@ def transform_to_adj_matrix(graph: np.ndarray, oriented: bool) -> np.ndarray:
 
 
 def find_hamilton_cycle(graph):
-    pass
+    """Find the hamiltonian cycle in the graph
+    Args:
+        graph (dict): the graph
 
+    Returns:
+        path: the path of the hamiltonian cycle or False if there are no
+        cycles
+    """
+    if len(find_components(graph)) != 1:
+        return False
+    visited = {}
+    for elem in graph:
+        visited[elem] = False
+    start = list(graph.keys())[0]
+    path = [start]
+    visited[start] = True
+
+    def hamiltonian_cycle(path, v):
+        if len(path) == len(graph):
+            if start in graph[v]:
+                path.append(start)
+                return path
+            else:
+                pass
+        for elem in graph[v]:
+            if visited[elem] == False:
+                visited[elem] = True
+                path.append(elem)
+                if hamiltonian_cycle(path, elem) != False:
+                    return path
+                visited[elem] = False
+                path.remove(elem)
+        return False
+    return hamiltonian_cycle(path, start)
 
 def find_euler_cycle(graph):
     pass
@@ -173,6 +205,7 @@ if __name__ == "__main__":
     # print(read_graph("graph_example.csv", repr_type="AdjMatrix",oriented=True))
     # print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
     # print(read_graph("graph_example.csv","AdjList"))
+    print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
     # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
     # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
     print(areIsomorphic(read_graph("graph_example.csv","AdjDict"),read_graph("graph_example.csv","AdjDict")))
