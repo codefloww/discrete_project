@@ -4,17 +4,23 @@ import pandas as pd
 import numpy as np
 import scipy.sparse as sp
 
+
 # function can return oriented and non-oriented graphs in adjacency matrix, incidence matrix, adjacency list
 def read_graph(
     path_to_file: str, repr_type: str = "AdjMatrix", oriented: bool = None
-) -> np.ndarray:
-
+) -> dict:
     if oriented is None:
         oriented = False
     else:
         oriented = True
-    graph = pd.read_csv(path_to_file, skiprows=0).to_numpy()
-    graph = np.append(graph, np.full((np.shape(graph)[0], 1), [1]), axis=1)
+    # graph = pd.read_csv(path_to_file, skiprows=0,delimiter=" ").to_numpy()
+    # graph = np.append(graph, np.full((np.shape(graph)[0], 1), [1]), axis=1)
+    graph = set()
+    with open(path_to_file,'r') as graph_file:
+        edges = set(graph_file.readlines())
+    for edge in edges:
+        graph.add((tuple(map(int,edge[:-1].split(" ")))))
+
 
     if repr_type == "AdjMatrix":
         adj_matrix = transform_to_adj_matrix(graph, oriented)
@@ -77,6 +83,7 @@ def transform_to_adj_matrix(graph: np.ndarray, oriented: bool) -> np.ndarray:
         dtype=graph.dtype,
     )
     return adj_matrix.todense()
+
 
 
 def find_hamilton_cycle(graph):
