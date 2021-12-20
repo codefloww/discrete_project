@@ -15,7 +15,7 @@ def read_graph(
     oriented = False if oriented is None else True
 
     if repr_type == "AdjMatrix":
-        graph = pd.read_csv(path_to_file, skiprows=0, delimiter=" ").to_numpy()
+        graph = pd.read_csv(path_to_file, skiprows=1, delimiter=" ").to_numpy()
         graph = np.append(graph, np.full((np.shape(graph)[0], 1), [1]), axis=1)
         return transform_to_adj_matrix(graph, oriented)
 
@@ -40,6 +40,7 @@ def transform_to_adj_dict(graph: list, oriented: bool) -> dict:
         dict: adjacency dict for graph
     """
     adj_dict = dict()
+    graph.remove(graph[0])
     if oriented:
         for edge in graph:
             if edge[0] not in adj_dict:
