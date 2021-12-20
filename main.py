@@ -149,11 +149,9 @@ def find_euler_cycle(graph):
         return path
 
     counter=0
-    new_edge=[]
     for i in graph:
         if len(graph.get(i)) % 2 != 0:
             counter+=1
-            new_edge.append(i)
     if counter == 0:
         return euler_cycle(graph)
     else:
