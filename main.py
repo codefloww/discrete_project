@@ -134,6 +134,11 @@ def find_euler_cycle(graph):
         path: the path of the euler cycle or False if there are no
         cycles
     """
+    for i in check_degree(graph).values():
+        if i%2 != 0: 
+            return False
+    return euler_cycle(graph)
+  
     def euler_cycle(graph):
         path = []
         queue = [list(graph.keys())[0]]
@@ -148,14 +153,6 @@ def find_euler_cycle(graph):
                 path.append(queue.pop()) 
         return path
 
-    counter=0
-    for i in graph:
-        if len(graph.get(i)) % 2 != 0:
-            counter+=1
-    if counter == 0:
-        return euler_cycle(graph)
-    else:
-        return False
 
 def isBipartite(graph):
     pass
