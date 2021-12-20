@@ -156,10 +156,6 @@ def find_euler_cycle(graph):
             new_edge.append(i)
     if counter == 0:
         return euler_cycle(graph)
-    elif counter == 2:
-        graph.get(new_edge[0]).append(new_edge[1])
-        graph.get(new_edge[1]).append(new_edge[0])
-        return euler_cycle(graph)
     else:
         return False
 
