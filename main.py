@@ -73,7 +73,7 @@ def transform_to_adj_matrix(graph: np.ndarray, oriented: bool) -> np.ndarray:
         np.ndarray: adjacency matrix for graph
     """
     in_deg = -1 if oriented else 1
-    shape = (graph.max() + 1, graph.max() + 1)
+    shape = (graph.max(), graph.max())
 
     adj_matrix = sp.coo_matrix(
         (graph[:, 2], (graph[:, 0], graph[:, 1])),
@@ -135,8 +135,8 @@ def find_euler_cycle(graph: dict) -> list:
         path: the path of the euler cycle or False if there are no
         cycles
 
-    """  
-    def euler_cycle(graph:dict)->list:
+    """
+    def euler_cycle(graph: dict) -> list:
 
         path = []
         queue = [list(graph.keys())[0]]
@@ -151,12 +151,11 @@ def find_euler_cycle(graph: dict) -> list:
                 path.append(queue.pop())
         return path
 
-    
-    if len(find_components(graph))!=1:
+    if len(find_components(graph)) != 1:
         return False
 
     for i in check_degree(graph).values():
-        if i%2 != 0: 
+        if i % 2 != 0:
             return False
     return euler_cycle(graph)
 
@@ -209,6 +208,8 @@ def areIsomorphic(graph1: dict, graph2: dict) -> bool:
         return False
     else:
         vertices_permutations = permutations(range(1, len(graph1) + 1))
+        graph1 = {node:list(adj_points) for node,adj_points in graph1.items()}
+        graph2 = {node:list(adj_points) for node,adj_points in graph2.items()}
         for permutation in vertices_permutations:
             new_dict = {}
             for i, vert in enumerate(permutation):
@@ -298,18 +299,16 @@ if __name__ == "__main__":
     # print(read_graph("graph_example.csv", repr_type="AdjDict"))
     # print(read_graph("graph_100000_4998622_1.csv", repr_type="AdjDict"))
     # read_graph("graph_100000_4998622_1.csv", "AdjDict")
-    # print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
-    # # print(read_graph("graph_example.csv","AdjList"))
-    # # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    print(bfs(read_graph("graph_example.csv", "AdjDict",oriented=True), 1))
+    print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
+    print(bfs(read_graph("graph_example.csv", "AdjDict", oriented=True), 1))
     # # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
-    # print(
-    #     areIsomorphic(
-    #         read_graph("graph_example.csv", "AdjDict"), read_graph("iso.csv", "AdjDict")
-    #     )
-    # )
-    # print(find_components(read_graph("graph_example.csv","AdjDict",oriented=True)))
-    # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    # print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))
+    print(
+        areIsomorphic(
+            read_graph("graph_example.csv", "AdjDict"), read_graph("iso.csv", "AdjDict")
+        )
+    )
+    print(find_components(read_graph("graph_example.csv","AdjDict",oriented=True)))
+    print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
+    print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
