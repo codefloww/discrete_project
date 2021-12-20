@@ -148,16 +148,10 @@ def find_euler_cycle(graph):
                 path.append(queue.pop()) 
         return path
 
-    counter=0
-    new_edge=[]
-    for i in graph:
-        if len(graph.get(i)) % 2 != 0:
-            counter+=1
-            new_edge.append(i)
-    if counter == 0:
-        return euler_cycle(graph)
-    else:
-        return False
+    for i in check_degree(graph).values():
+        if i%2 != 0: 
+            return False
+    return euler_cycle(graph)
 
 def isBipartite(graph):
     pass
