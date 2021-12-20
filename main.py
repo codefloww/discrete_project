@@ -134,8 +134,10 @@ def find_euler_cycle(graph: dict) -> list:
     Returns:
         path: the path of the euler cycle or False if there are no
         cycles
+
     """  
     def euler_cycle(graph:dict)->list:
+
         path = []
         queue = [list(graph.keys())[0]]
         while queue:
@@ -148,6 +150,10 @@ def find_euler_cycle(graph: dict) -> list:
             else:
                 path.append(queue.pop())
         return path
+
+    
+    if len(find_components(graph))!=1:
+        return False
 
     for i in check_degree(graph).values():
         if i%2 != 0: 
