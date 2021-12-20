@@ -197,10 +197,16 @@ def areIsomorphic(graph1: dict, graph2: dict) -> bool:
         hamilton_graph2 = bool(find_hamilton_cycle(graph2))
         return hamilton_graph1 == hamilton_graph2
 
+    def euler_invariant(graph1:dict,graph2:dict) -> bool:
+        euler_graph1 = bool(find_euler_cycle(graph1))
+        euler_graph2 = bool(find_euler_cycle(graph2))
+        return euler_graph1 == euler_graph2 
+
     if not (
         degree_invariant(graph1, graph2)
         and components_invariant(graph1, graph2)
         and hamilton_invariant(graph1, graph2)
+        and euler_invariant(graph1,graph2)
     ):
         return False
     else:
@@ -304,9 +310,8 @@ if __name__ == "__main__":
         )
     )
     # print(find_components(read_graph("graph_example.csv","AdjDict")))
-    print(check_degree(read_graph("graph_example.csv", repr_type="AdjDict")))
-    print(find_components(read_graph("graph_example.csv", repr_type="AdjDict")))
-
+    print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
+    print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))    
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
     
