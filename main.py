@@ -304,6 +304,9 @@ def bfs(graph: dict, node: int) -> list:
 
 if __name__ == "__main__":
     import time
+    import sys
+
+    sys.setrecursionlimit(10 ** 6)
 
     start = time.perf_counter()
 
