@@ -150,17 +150,11 @@ def find_euler_cycle(graph: dict) -> list:
                 path.append(queue.pop())
         return path
 
-    counter = 0
-    new_edge = []
+    counter=0
     for i in graph:
         if len(graph.get(i)) % 2 != 0:
-            counter += 1
-            new_edge.append(i)
+            counter+=1
     if counter == 0:
-        return euler_cycle(graph)
-    elif counter == 2:
-        graph.get(new_edge[0]).append(new_edge[1])
-        graph.get(new_edge[1]).append(new_edge[0])
         return euler_cycle(graph)
     else:
         return False
