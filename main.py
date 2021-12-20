@@ -102,11 +102,11 @@ def find_hamilton_cycle(graph):
     visited[start] = True
 
     # The main function of the hamiltonian cycle. Uses backtracking
-    def hamiltonian_cycle(path, vertice_index):
+    def hamiltonian_cycle(path, vertix_index):
         # Checks if the len of the path is the len of the graph,
         # if so, returns the hamiltonian cycle
         if len(path) == len(graph):
-            if start in graph[vertice_index]:
+            if start in graph[vertix_index]:
                 path.append(start)
                 return path
             else:
@@ -114,7 +114,7 @@ def find_hamilton_cycle(graph):
 
         # If the len of the path is less than len of the graph,
         # tries to create path through all the adjacency vertices
-        for elem in graph[vertice_index]:
+        for elem in graph[vertix_index]:
             if visited[elem] == False:
                 visited[elem] = True
                 path.append(elem)
