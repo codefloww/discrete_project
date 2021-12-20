@@ -124,10 +124,44 @@ def find_hamilton_cycle(graph):
 
     return hamiltonian_cycle(path, start)
 
-
 def find_euler_cycle(graph):
-    pass
+    """Find the euler cycle in the graph
 
+    Args:
+        graph (dict): the graph
+
+    Returns:
+        path: the path of the euler cycle or False if there are no
+        cycles
+    """
+    def euler_cycle(graph):
+        path = []
+        queue = [list(graph.keys())[0]]
+        while queue:
+            vertex = queue[-1]
+            if graph[vertex]:
+                adj_vertex=graph[vertex][0]
+                queue.append(adj_vertex)
+                graph.get(vertex).remove(adj_vertex)
+                graph.get(adj_vertex).remove(vertex)     
+            else:
+                path.append(queue.pop()) 
+        return path
+
+    counter=0
+    new_edge=[]
+    for i in graph:
+        if len(graph.get(i)) % 2 != 0:
+            counter+=1
+            new_edge.append(i)
+    if counter == 0:
+        return euler_cycle(graph)
+    elif counter == 2:
+        graph.get(new_edge[0]).append(new_edge[1])
+        graph.get(new_edge[1]).append(new_edge[0])
+        return euler_cycle(graph)
+    else:
+        return False
 
 def isBipartite(graph):
     pass
@@ -251,18 +285,11 @@ def bfs(graph: dict, node: int) -> list:
     return path
 
 
-def find_articular_points(graph, start_node):
-    pass
-
-
-def find_bridges(graph):
-    pass
-
-
 if __name__ == "__main__":
     import time
 
     start = time.perf_counter()
+
     # print(read_graph("graph_example.csv", repr_type="AdjDict"))
     # print(read_graph("graph_100000_4998622_1.csv", repr_type="AdjDict"))
     # read_graph("graph_100000_4998622_1.csv","AdjDict")
@@ -282,3 +309,4 @@ if __name__ == "__main__":
 
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
+    
