@@ -143,7 +143,7 @@ def find_euler_cycle(graph: dict) -> list:
         while queue:
             vertex = queue[-1]
             if graph[vertex]:
-                adj_vertex = graph[vertex][0]
+                adj_vertex = list(graph[vertex])[0]
                 queue.append(adj_vertex)
                 graph.get(vertex).remove(adj_vertex)
                 graph.get(adj_vertex).remove(vertex)
