@@ -5,40 +5,31 @@ import numpy as np
 import scipy.sparse as sp
 from itertools import permutations
 from collections import Counter
-
+from csv import reader
 
 # function can return oriented and non-oriented graphs in adjacency matrix, incidence matrix, adjacency list
 def read_graph(
-    path_to_file: str, repr_type: str = "AdjMatrix", oriented: bool = None
+    path_to_file: str, repr_type: str = "AdjDict", oriented: bool = None
 ) -> dict:
 
     oriented = False if oriented is None else True
-    graph = set()
-
-
 
     if repr_type == "AdjMatrix":
         graph = pd.read_csv(path_to_file, skiprows=0, delimiter=" ").to_numpy()
         graph = np.append(graph, np.full((np.shape(graph)[0], 1), [1]), axis=1)
-        adj_matrix = transform_to_adj_matrix(graph, oriented)
-        return adj_matrix
+        return transform_to_adj_matrix(graph, oriented)
 
     elif repr_type == "AdjDict":
-        with open(path_to_file, "r") as graph_file:
-            edges = set(graph_file.readlines())
-            for edge in edges:
-                graph.add((tuple(map(int, edge[:-1].split(" ")))))
-                adj_dict = transform_to_adj_dict(graph, oriented)
-        return adj_dict
-    #     inc_matrix = sp.coo_matrix(
-    #         (graph[:, 2], (graph[:, 0],graph[:,1])),
-    #         shape=(graph.max()+1,np.shape(graph)),
-    #         dtype=graph.dtype,
-    # )
-    #     return inc_matrix.todense()
+        graph = list()
+
+        with open(path_to_file, "r") as file:
+            read_data = reader(file, delimiter=" ")
+            for line in read_data:
+                graph.append((int(line[0]), int(line[1])))
+        return transform_to_adj_dict(graph, oriented)
 
 
-def transform_to_adj_dict(graph: np.ndarray, oriented: bool) -> dict:
+def transform_to_adj_dict(graph: list, oriented: bool) -> dict:
     """function for representation of graph edges in adjacency dict
 
     Args:
@@ -48,14 +39,26 @@ def transform_to_adj_dict(graph: np.ndarray, oriented: bool) -> dict:
     Returns:
         dict: adjacency dict for graph
     """
-    adj_dict = {}
+    adj_dict = dict()
     if oriented:
         for edge in graph:
-            adj_dict[edge[0]] = adj_dict.get(edge[0], []) + [edge[1]]
+            if edge[0] not in adj_dict:
+                adj_dict[edge[0]] = {edge[1]}
+            else:
+                adj_dict[edge[0]].add(edge[1])
+
     else:
         for edge in graph:
-            adj_dict[edge[0]] = adj_dict.get(edge[0], []) + [edge[1]]
-            adj_dict[edge[1]] = adj_dict.get(edge[1], []) + [edge[0]]
+            if edge[0] not in adj_dict:
+                adj_dict[edge[0]] = {edge[1]}
+            else:
+                adj_dict[edge[0]].add(edge[1])
+
+            if edge[1] not in adj_dict:
+                adj_dict[edge[1]] = {edge[0]}
+            else:
+                adj_dict[edge[1]].add(edge[0])
+
     return adj_dict
 
 
@@ -69,11 +72,9 @@ def transform_to_adj_matrix(graph: np.ndarray, oriented: bool) -> np.ndarray:
     Returns:
         np.ndarray: adjacency matrix for graph
     """
-    if oriented:
-        in_deg = -1
-    else:
-        in_deg = 1
+    in_deg = -1 if oriented else 1
     shape = (graph.max() + 1, graph.max() + 1)
+
     adj_matrix = sp.coo_matrix(
         (graph[:, 2], (graph[:, 0], graph[:, 1])),
         shape=shape,
@@ -86,8 +87,7 @@ def transform_to_adj_matrix(graph: np.ndarray, oriented: bool) -> np.ndarray:
     return adj_matrix.todense()
 
 
-
-def find_hamilton_cycle(graph):
+def find_hamilton_cycle(graph: dict) -> list:
     """Find the hamiltonian cycle in the graph
     Args:
         graph (dict): the graph
@@ -105,7 +105,7 @@ def find_hamilton_cycle(graph):
     path = [start]
     visited[start] = True
 
-    def hamiltonian_cycle(path, v):
+    def hamiltonian_cycle(path: list, v: int) -> list:
         if len(path) == len(graph):
             if start in graph[v]:
                 path.append(start)
@@ -124,7 +124,8 @@ def find_hamilton_cycle(graph):
 
     return hamiltonian_cycle(path, start)
 
-def find_euler_cycle(graph):
+
+def find_euler_cycle(graph: dict) -> list:
     """Find the euler cycle in the graph
 
     Args:
@@ -134,25 +135,26 @@ def find_euler_cycle(graph):
         path: the path of the euler cycle or False if there are no
         cycles
     """
-    def euler_cycle(graph):
+
+    def euler_cycle(graph: dict) -> list:
         path = []
         queue = [list(graph.keys())[0]]
         while queue:
             vertex = queue[-1]
             if graph[vertex]:
-                adj_vertex=graph[vertex][0]
+                adj_vertex = graph[vertex][0]
                 queue.append(adj_vertex)
                 graph.get(vertex).remove(adj_vertex)
-                graph.get(adj_vertex).remove(vertex)     
+                graph.get(adj_vertex).remove(vertex)
             else:
-                path.append(queue.pop()) 
+                path.append(queue.pop())
         return path
 
-    counter=0
-    new_edge=[]
+    counter = 0
+    new_edge = []
     for i in graph:
         if len(graph.get(i)) % 2 != 0:
-            counter+=1
+            counter += 1
             new_edge.append(i)
     if counter == 0:
         return euler_cycle(graph)
@@ -162,6 +164,7 @@ def find_euler_cycle(graph):
         return euler_cycle(graph)
     else:
         return False
+
 
 def isBipartite(graph):
     pass
@@ -197,16 +200,16 @@ def areIsomorphic(graph1: dict, graph2: dict) -> bool:
         hamilton_graph2 = bool(find_hamilton_cycle(graph2))
         return hamilton_graph1 == hamilton_graph2
 
-    def euler_invariant(graph1:dict,graph2:dict) -> bool:
+    def euler_invariant(graph1: dict, graph2: dict) -> bool:
         euler_graph1 = bool(find_euler_cycle(graph1))
         euler_graph2 = bool(find_euler_cycle(graph2))
-        return euler_graph1 == euler_graph2 
+        return euler_graph1 == euler_graph2
 
     if not (
         degree_invariant(graph1, graph2)
         and components_invariant(graph1, graph2)
         and hamilton_invariant(graph1, graph2)
-        and euler_invariant(graph1,graph2)
+        and euler_invariant(graph1, graph2)
     ):
         return False
     else:
@@ -243,7 +246,6 @@ def find_components(graph: dict) -> list:
     return components
 
 
-# can be used for backtracking
 def dfs(graph: dict, node: int, path: list = None) -> list:
     """recurrent dfs algo for adjecency list presented graph
 
@@ -298,20 +300,19 @@ if __name__ == "__main__":
 
     # print(read_graph("graph_example.csv", repr_type="AdjDict"))
     # print(read_graph("graph_100000_4998622_1.csv", repr_type="AdjDict"))
-    # read_graph("graph_100000_4998622_1.csv","AdjDict")
-    print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
-    # print(read_graph("graph_example.csv","AdjList"))
+    read_graph("graph_100000_4998622_1.csv", "AdjDict")
+    # print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
+    # # print(read_graph("graph_example.csv","AdjList"))
+    # # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
+    # # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
+    # # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
+    # print(
+    #     areIsomorphic(
+    #         read_graph("graph_example.csv", "AdjDict"), read_graph("iso.csv", "AdjDict")
+    #     )
+    # )
+    # # print(find_components(read_graph("graph_example.csv","AdjDict")))
     # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
-    # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
-    print(
-        areIsomorphic(
-            read_graph("graph_example.csv", "AdjDict"), read_graph("iso.csv", "AdjDict")
-        )
-    )
-    # print(find_components(read_graph("graph_example.csv","AdjDict")))
-    print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))    
+    # print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
-    
