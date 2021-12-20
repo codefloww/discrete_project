@@ -6,12 +6,16 @@ import scipy.sparse as sp
 from itertools import permutations
 from collections import Counter
 
+
 # function can return oriented and non-oriented graphs in adjacency matrix, incidence matrix, adjacency list
 def read_graph(
     path_to_file: str, repr_type: str = "AdjMatrix", oriented: bool = None
 ) -> dict:
+
     oriented = False if oriented is None else True
     graph = set()
+
+
 
     if repr_type == "AdjMatrix":
         graph = pd.read_csv(path_to_file, skiprows=0, delimiter=" ").to_numpy()
@@ -80,6 +84,7 @@ def transform_to_adj_matrix(graph: np.ndarray, oriented: bool) -> np.ndarray:
         dtype=graph.dtype,
     )
     return adj_matrix.todense()
+
 
 
 def find_hamilton_cycle(graph):
