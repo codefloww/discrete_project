@@ -76,11 +76,11 @@ def transform_to_adj_matrix(graph: np.ndarray, oriented: bool) -> np.ndarray:
     shape = (graph.max(), graph.max())
 
     adj_matrix = sp.coo_matrix(
-        (graph[:, 2], (graph[:, 0], graph[:, 1])),
+        (graph[:, 2], (graph[:, 0]-1, graph[:, 1]-1)),
         shape=shape,
         dtype=graph.dtype,
     ) + sp.coo_matrix(
-        (in_deg * graph[:, 2], (graph[:, 1], graph[:, 0])),
+        (in_deg * graph[:, 2], (graph[:, 1]-1, graph[:, 0]-1)),
         shape=shape,
         dtype=graph.dtype,
     )
