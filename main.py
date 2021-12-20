@@ -88,8 +88,12 @@ def find_hamilton_cycle(graph):
         path: the path of the hamiltonian cycle or False if there are no
         cycles
     """
+    # Checking the amount of components, if the amount is over 2, than returns False
     if len(find_components(graph)) != 1:
         return False
+
+    # The set of vertices that were visited, will be shown by True or False
+    # Example: {False, False, True, False, True}
     visited = {}
     for elem in graph:
         visited[elem] = False
@@ -97,14 +101,20 @@ def find_hamilton_cycle(graph):
     path = [start]
     visited[start] = True
 
-    def hamiltonian_cycle(path, v):
+    # The main function of the hamiltonian cycle. Uses backtracking
+    def hamiltonian_cycle(path, vertice_index):
+        # Checks if the len of the path is the len of the graph,
+        # if so, returns the hamiltonian cycle
         if len(path) == len(graph):
-            if start in graph[v]:
+            if start in graph[vertice_index]:
                 path.append(start)
                 return path
             else:
                 pass
-        for elem in graph[v]:
+
+        # If the len of the path is less than len of the graph,
+        # tries to create path through all the adjacency vertices
+        for elem in graph[vertice_index]:
             if visited[elem] == False:
                 visited[elem] = True
                 path.append(elem)
@@ -113,6 +123,7 @@ def find_hamilton_cycle(graph):
                 visited[elem] = False
                 path.remove(elem)
         return False
+
     return hamiltonian_cycle(path, start)
 
 def find_euler_cycle(graph):
