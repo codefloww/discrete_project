@@ -249,9 +249,10 @@ def dfs(graph: dict, node: int, path: list = None) -> list:
     if path == None:
         path = []
     path.append(node)
-    for neighbour in graph[node]:
-        if neighbour not in path:
-            path = dfs(graph, neighbour, path)
+    if node in graph:
+        for neighbour in graph[node]:
+            if neighbour not in path:
+                path = dfs(graph, neighbour, path)
     return path
 
 
@@ -275,10 +276,11 @@ def bfs(graph: dict, node: int) -> list:
     while queue:
         s = queue.pop(0)
         path.append(s)
-        for neighbour in graph[s]:
-            if neighbour not in visited:
-                visited.append(neighbour)
-                queue.append(neighbour)
+        if s in graph:
+            for neighbour in graph[s]:
+                if neighbour not in visited:
+                    visited.append(neighbour)
+                    queue.append(neighbour)
     return path
 
 
@@ -289,18 +291,18 @@ if __name__ == "__main__":
 
     # print(read_graph("graph_example.csv", repr_type="AdjDict"))
     # print(read_graph("graph_100000_4998622_1.csv", repr_type="AdjDict"))
-    read_graph("graph_100000_4998622_1.csv", "AdjDict")
+    # read_graph("graph_100000_4998622_1.csv", "AdjDict")
     # print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
     # # print(read_graph("graph_example.csv","AdjList"))
     # # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    # # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
+    print(bfs(read_graph("graph_example.csv", "AdjDict",oriented=True), 1))
     # # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
     # print(
     #     areIsomorphic(
     #         read_graph("graph_example.csv", "AdjDict"), read_graph("iso.csv", "AdjDict")
     #     )
     # )
-    # # print(find_components(read_graph("graph_example.csv","AdjDict")))
+    # print(find_components(read_graph("graph_example.csv","AdjDict",oriented=True)))
     # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
     # print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))
     end = time.perf_counter()
