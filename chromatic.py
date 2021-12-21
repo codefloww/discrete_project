@@ -27,9 +27,6 @@ def click_4_check(graph: dict) -> tuple:
 def colorize(graph: list, vert: int, spread: list):
     colors = 3
 
-    # if not click_4_check():
-    #     return False
-
     for color in range(colors):
         if safe_vert(graph, vert, color, spread):
             spread[vert] = color
