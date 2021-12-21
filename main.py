@@ -173,8 +173,36 @@ def find_euler_cycle(graph: dict) -> list:
     return euler_cycle(graph)
 
 
-def isBipartite(graph):
-    pass
+def isBipartite(graph:dict)->bool:
+    """checks whether graph is bipartite using coloring
+
+    Args:
+        graph (dict): adjacency dictionary
+
+    Returns:
+        bool: returns whether graph is bipartite
+    """    
+    max_point = max(graph)
+    graph_list = [[] for _ in range(max_point+1)]
+    for node in graph:
+        graph_list[node] = list(graph[node])
+    color = {}
+    def dfs(pos):
+        for i in graph_list[pos]:
+            if i in color:
+                if color[i] == color[pos]:
+                    return False
+            else:
+                color[i] = 1 - color[pos]
+                if not dfs(i):
+                    return False
+        return True
+    for i in range(len(graph_list)):
+        if i not in color:
+            color[i] = 0
+            if not dfs(i):
+                return False
+    return True
 
 
 def areIsomorphic(graph1: dict, graph2: dict) -> bool:
@@ -316,16 +344,16 @@ if __name__ == "__main__":
     # print(read_graph("graph_100000_4998622_1.csv", repr_type="AdjDict"))
 
     # read_graph("graph_100000_4998622_1.csv", "AdjDict")
-    print(read_graph("graph_example.csv", repr_type="AdjMatrix"))
-    print(bfs(read_graph("graph_example.csv", "AdjDict", oriented=True), 1))
-    # # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
-    print(
-        areIsomorphic(
-            read_graph("graph_example.csv", "AdjDict"), read_graph("iso.csv", "AdjDict")
-        )
-    )
-    print(find_components(read_graph("graph_example.csv","AdjDict",oriented=True)))
-    print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))
+    print(read_graph("graph_example.csv", repr_type="AdjDict"))
+    # print(bfs(read_graph("graph_example.csv", "AdjDict", oriented=True), 1))
+    # # # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
+    # print(
+    #     areIsomorphic(
+    #         read_graph("graph_example.csv", "AdjDict"), read_graph("iso.csv", "AdjDict")
+    #     )
+    # )
+    # print(find_components(read_graph("graph_example.csv","AdjDict",oriented=True)))
+    # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
+    # print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
