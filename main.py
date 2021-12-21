@@ -342,18 +342,20 @@ if __name__ == "__main__":
 
     # print(read_graph("graph_example.csv", repr_type="AdjDict"))
     # print(read_graph("graph_100000_4998622_1.csv", repr_type="AdjDict"))
-
-    # read_graph("graph_100000_4998622_1.csv", "AdjDict")
-    print(read_graph("graph_example.csv", repr_type="AdjDict"))
-    # print(bfs(read_graph("graph_example.csv", "AdjDict", oriented=True), 1))
-    # # # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
+    # read_graph("graph_100000_4998622_1.csv","AdjDict")
+    print(read_graph("graphs/graph_5000_247404_0.csv", repr_type="AdjDict"))
+    # print(read_graph("graph_example.csv","AdjList"))
+    # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
+    # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
+    # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
     # print(
     #     areIsomorphic(
     #         read_graph("graph_example.csv", "AdjDict"), read_graph("iso.csv", "AdjDict")
     #     )
     # )
-    # print(find_components(read_graph("graph_example.csv","AdjDict",oriented=True)))
+    # # print(find_components(read_graph("graph_example.csv","AdjDict")))
     # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    # print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))
+    # print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))    
+
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
