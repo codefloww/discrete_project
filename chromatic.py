@@ -21,7 +21,7 @@ def click_4_check(graph: dict) -> tuple:
                                 (first_vert, second_vert, third_vert, fourth_vert),
                             )
 
-    return True
+    return (True, ())
 
 
 def colorize(graph: list, vert: int, spread: list):
@@ -49,13 +49,13 @@ def safe_vert(graph: list, vert: int, color: int, spread: list) -> bool:
     return True
 
 
-def main_colorize(file_path: str,oriented = None):
-    oriented = False if oriented is None else True
-    if not click_4_check(main.read_graph(file_path, repr_type='AdjDict',oriented = oriented))[0]:
+def main_colorize(file_path: str,orient:bool = None):
+    # orient = False if orient is None else True
+    if not click_4_check(main.read_graph(file_path, repr_type='AdjDict', oriented=orient))[0]:
         print('Coloring is not possible, 4-click exists in graph')
         return False
 
-    G = main.read_graph(file_path, repr_type="AdjMatrix",oriented=oriented).getA()
+    G = main.read_graph(file_path, repr_type="AdjMatrix",oriented=orient).getA()
     spread = [None for i in range(len(G))]
 
     return colorize(G, 0, spread)
@@ -63,3 +63,5 @@ def main_colorize(file_path: str,oriented = None):
 
 if __name__ == "__main__":
     print(main_colorize('graph_example.csv'))
+    # print(main.read_graph('graph_example.csv').keys())
+    # print(click_4_check(main.read_graph('graph_example.csv', repr_type='AdjDict')))

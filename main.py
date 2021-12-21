@@ -264,8 +264,22 @@ def areIsomorphic(graph1: dict, graph2: dict) -> bool:
         return False
 
 
-def graph_coloring(file_path,oriented):
-    return chromatic.main_colorize(file_path,oriented)
+def graph_coloring(file_path:str,oriented:bool = None)->list:
+    """Function that tries to colorise given graph in 3 colors \
+returns False if graph can't be colored in 3 colors. \
+else returns list with colors as elements and vertice number as index.
+
+    Args:
+        file_path (str): [description]
+        oriented (bool, optional): [description]. Defaults to None.
+
+    Returns:
+        [type]: [description]
+    """
+    # oriented = False if oriented is None else True
+    colors = chromatic.main_colorize(file_path,oriented)
+    output = [(vertice,color) for vertice,color in enumerate(colors)] if colors else False
+    return output
 
 
 def check_degree(graph: dict) -> dict:
@@ -340,23 +354,13 @@ if __name__ == "__main__":
     sys.setrecursionlimit(10 ** 7)
 
     start = time.perf_counter()
+    print(read_graph("graph_5000_247404_0.csv", repr_type="AdjDict"))
+    print(read_graph("graph_100_1942_0.csv",repr_type="AdjMatrix",oriented=True))
+    print(find_hamilton_cycle(read_graph("graph_100_1942_0.csv")))
+    print(find_euler_cycle(read_graph("graph_100_1942_0.csv")))
+    print(isBipartite(read_graph("graph_100_1942_0.csv")))
+    print(areIsomorphic(read_graph("graph_example.csv"),read_graph("graph_example.csv")))
+    print(graph_coloring("graph_example.csv"))
 
-    # print(read_graph("graph_example.csv", repr_type="AdjDict"))
-    # print(read_graph("graph_100000_4998622_1.csv", repr_type="AdjDict"))
-    # read_graph("graph_100000_4998622_1.csv","AdjDict")
-    # print(read_graph("graph_5000_247404_0.csv", repr_type="AdjDict"))
-    # print(read_graph("graph_example.csv","AdjList"))
-    # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
-    # print(bfs(read_graph("graph_example.csv", "AdjDict"), 0))
-    # print(
-    #     areIsomorphic(
-    #         read_graph("graph_example.csv", "AdjDict"), read_graph("iso.csv", "AdjDict")
-    #     )
-    # )
-    # # print(find_components(read_graph("graph_example.csv","AdjDict")))
-    # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
-    # print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))    
-    print(graph_coloring("graph_100_1942_0.csv",True))
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
