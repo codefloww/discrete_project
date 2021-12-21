@@ -49,12 +49,13 @@ def safe_vert(graph: list, vert: int, color: int, spread: list) -> bool:
     return True
 
 
-def main_colorize(file_path: str):
-    if not click_4_check(main.read_graph(file_path, repr_type='AdjDict')):
+def main_colorize(file_path: str,oriented = None):
+    oriented = False if oriented is None else True
+    if not click_4_check(main.read_graph(file_path, repr_type='AdjDict',oriented = oriented))[0]:
         print('Coloring is not possible, 4-click exists in graph')
         return False
 
-    G = main.read_graph(file_path).getA()
+    G = main.read_graph(file_path, repr_type="AdjMatrix",oriented=oriented).getA()
     spread = [None for i in range(len(G))]
 
     return colorize(G, 0, spread)

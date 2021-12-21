@@ -264,8 +264,8 @@ def areIsomorphic(graph1: dict, graph2: dict) -> bool:
         return False
 
 
-def graph_coloring(file_path):
-    return chromatic.main_colorize(file_path)
+def graph_coloring(file_path,oriented):
+    return chromatic.main_colorize(file_path,oriented)
 
 
 def check_degree(graph: dict) -> dict:
@@ -344,7 +344,7 @@ if __name__ == "__main__":
     # print(read_graph("graph_example.csv", repr_type="AdjDict"))
     # print(read_graph("graph_100000_4998622_1.csv", repr_type="AdjDict"))
     # read_graph("graph_100000_4998622_1.csv","AdjDict")
-    print(read_graph("graphs/graph_5000_247404_0.csv", repr_type="AdjDict"))
+    # print(read_graph("graph_5000_247404_0.csv", repr_type="AdjDict"))
     # print(read_graph("graph_example.csv","AdjList"))
     # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
     # print(dfs(read_graph("graph_example.csv", "AdjDict"), 2))
@@ -357,6 +357,6 @@ if __name__ == "__main__":
     # # print(find_components(read_graph("graph_example.csv","AdjDict")))
     # print(find_hamilton_cycle(read_graph("graph_example.csv", "AdjDict")))
     # print(find_euler_cycle(read_graph("graph_example.csv", "AdjDict")))    
-
+    print(graph_coloring("graph_100_1942_0.csv",True))
     end = time.perf_counter()
     print(f"Time for execution function:{end-start}")
