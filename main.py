@@ -6,6 +6,7 @@ import scipy.sparse as sp
 from itertools import permutations
 from collections import Counter
 from csv import reader
+import chromatic
 
 # function can return oriented and non-oriented graphs in adjacency matrix, incidence matrix, adjacency list
 def read_graph(
@@ -263,8 +264,8 @@ def areIsomorphic(graph1: dict, graph2: dict) -> bool:
         return False
 
 
-def graph_coloring(graph):
-    pass
+def graph_coloring(file_path):
+    return chromatic.main_colorize(file_path)
 
 
 def check_degree(graph: dict) -> dict:
@@ -336,7 +337,7 @@ if __name__ == "__main__":
     import time
     import sys
 
-    sys.setrecursionlimit(10 ** 6)
+    sys.setrecursionlimit(10 ** 7)
 
     start = time.perf_counter()
 
